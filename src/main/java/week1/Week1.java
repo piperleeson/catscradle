@@ -41,7 +41,7 @@ public class Week1 {
      * @param x is the x coordinate of the point.
      * @param y is the y coordinate of the point.
      */
-    public Week1 (double x, double y) {
+    public Week1 (double x, double y, double par1) {
         this.x = x;
         this.y = y;
     } // Vector2D( double, double )
@@ -65,7 +65,7 @@ public class Week1 {
      */
     public Week1 add(Week1 v) {
 
-        return new Week1(0.0, 0.0);
+        return new Week1(this.getX(), + v.getX(), this.getY() + v.getY());
     } // add (Vector2D )
 
     /**
@@ -82,7 +82,7 @@ public class Week1 {
      */
     public Week1 scale(double xFactor, double yFactor) {
 
-        return new Week1( 0.0, 0.0 );
+        return new Week1( xFactor * this.getX(), yFactor * this.getY(), this.getY() + v.getY() );
     } // scale( double )
 
     /**
@@ -105,7 +105,7 @@ public class Week1 {
      */
     public Week1 scale(double factor) {
 
-        return new Week1( 0.0, 0.0 );
+        return new Week1( factor * this.getX(), factor * this.getY(), this.getY() + v.getY() );
     } // scale( double )
 
     /**
@@ -127,7 +127,7 @@ public class Week1 {
         double xCoord = cosine * this.getX() - sine * this.getY();
         double yCoord = sine * this.getX() + cosine * this.getY();
         
-        return new Week1( xCoord, yCoord );
+        return new Week1( xCoord, yCoord, this.getY() + v.getY() );
     } // rotate( double )
 
     /**
@@ -147,7 +147,7 @@ public class Week1 {
         Week1 u = this.rotate(angle);
         Week1 v = u.scale(scaleX, scaleY);
 
-        return new Week1(v.x + deltaX, v.y + deltaY);
+        return new Week1(v.x + deltaX, v.y + deltaY, this.getY() + v.getY());
     } // rotateScaleTranslate( double, double, double, double, double )
 
     /**
@@ -170,7 +170,7 @@ public class Week1 {
      */
     public double dot(Week1 v) {
 
-        return 0.0;
+        return this.getX() * v.getX() + this.getY() * v.getY();
     } // dot( Vector2D )
 
     /**
@@ -239,8 +239,8 @@ public class Week1 {
      * <code>main()</code> method.
      */
     public static void main(String[] args) {
-        Week1 a = new Week1(3, 4);
-        Week1 b = new Week1(5, 12);
+        Week1 a = new Week1(3, 4, this.getY() + v.getY());
+        Week1 b = new Week1(5, 12, this.getY() + v.getY());
 
         System.out.println("magnitude of a " + a.magnitude());
 
