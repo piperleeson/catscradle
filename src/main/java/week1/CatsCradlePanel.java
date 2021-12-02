@@ -92,11 +92,11 @@ public class CatsCradlePanel extends JPanel implements ActionListener {
       this.angle = fraction * 2.0 * Math.PI;
       double x = Math.cos(angle + outerAngle);
       double y = Math.sin(angle + outerAngle);
-      outside[i] = new Week1(x, y);
+      outside[i] = new Week1(x, y, this.getY() + v.getY());
 
       x = Math.cos(angle + innerAngle);
       y = Math.sin(angle + innerAngle);
-      inside[i] = new Week1(goldenRatio * x, goldenRatio * y);
+      inside[i] = new Week1(goldenRatio * x, goldenRatio * y, this.getY() + v.getY());
     } // for
 
     // Make the 2 polygons that are defined by the convex hulls of
@@ -120,34 +120,34 @@ public class CatsCradlePanel extends JPanel implements ActionListener {
 
     g2D.setColor(FG_COLOR);
     for (int i = 0; i < outside.length; i++) {
-      Week1 u = outside[i];
-      u = u.rotateScaleTranslate(rotation, scaleX, scaleY, deltaX, deltaY);
+    Week1 u = outside[i];
+    u = u.rotateScaleTranslate(rotation, scaleX, scaleY, deltaX, deltaY);
 
-      Week1 v = outside[(i + 1) % this.numberOfSides];
-      v = v.rotateScaleTranslate(rotation, scaleX, scaleY, deltaX, deltaY);
+    Week1 v = outside[(i + 1) % this.numberOfSides];
+    v = v.rotateScaleTranslate(rotation, scaleX, scaleY, deltaX, deltaY);
 
-      double x0 = u.getX();
-      double y0 = u.getY();
-      double x1 = v.getX();
-      double y1 = v.getY();
-      Line2D line = new Line2D.Double(x0, y0, x1, y1);
-      g2D.setStroke(this.outsideStroke);
-      g2D.draw(line);
+    double x0 = u.getX();
+    double y0 = u.getY();
+    double x1 = v.getX();
+    double y1 = v.getY();
+    Line2D line = new Line2D.Double(x0, y0, x1, y1);
+    g2D.setStroke(this.outsideStroke);
+    g2D.draw(line);
 
-      u = inside[i];
-      u = u.rotateScaleTranslate(rotation, scaleX, scaleY, deltaX, deltaY);
+    u = inside[i];
+    u = u.rotateScaleTranslate(rotation, scaleX, scaleY, deltaX, deltaY);
 
-      v = inside[(i + 1) % this.numberOfSides];
-      v = v.rotateScaleTranslate(rotation, scaleX, scaleY, deltaX, deltaY);
+    v = inside[(i + 1) % this.numberOfSides];
+    v = v.rotateScaleTranslate(rotation, scaleX, scaleY, deltaX, deltaY);
 
-      x0 = u.getX();
-      y0 = u.getY();
-      x1 = v.getX();
-      y1 = v.getY();
+    x0 = u.getX();
+    y0 = u.getY();
+    x1 = v.getX();
+    y1 = v.getY();
 
-      line = new Line2D.Double(x0, y0, x1, y1);
-      g2D.setStroke(this.insideStroke);
-      g2D.draw(line);
+    line = new Line2D.Double(x0, y0, x1, y1);
+    g2D.setStroke(this.insideStroke);
+    g2D.draw(line);
     } // for
 
     // Make the remaining edges (line segments) needed to define
