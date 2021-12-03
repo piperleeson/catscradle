@@ -12,7 +12,7 @@ public class CatsCradle extends JFrame {
     private static final int FRAME_WIDTH = 512;
     private static final int FRAME_HEIGHT = 512;
     private static final String FRAME_TITLE = "Cat's Cradle";
-    private static final int NUMBER_OF_SIDES = 12;
+    private static final int NUMBER_OF_SIDES = 3;
 
   /**
    * Create a window on the screen, put a panel in the

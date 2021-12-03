@@ -15,28 +15,28 @@ public class CatsCradlePanel extends JPanel implements ActionListener {
 
   // Specify the color of the background on which the figures
   // will be drawn.
-    private static final Color BG_COLOR = new Color(72, 12, 12);
-    private static final Color FG_COLOR = new Color(180, 192, 224);
+  private static final Color BG_COLOR = new Color(0, 0, 0);
+  private static final Color FG_COLOR = new Color(180, 192, 224);
   // MARGIN gives some separation between the figures drawn
   // and the edge of the panel in which they are drawn.
   // The value must be at least zero and less than 0.5.
-    private static final double MARGIN = 0.1;
+  private static final double MARGIN = 0.1;
   // Bigger values of SPEED result in a slower animation.
   // Smaller values of SPEED result in a faster animation.
-    private static final double SPEED = 64.0;
+  private static final double SPEED = 45.0;
   // Specify the thickness of the line segments used
   // to draw the inside and outside figures.
-    private static final float OUTSIDE_LINE_THICKNESS = 4;
-    private static final float INSIDE_LINE_THICKNESS = 2;
-    private int numberOfSides;
-    private double outerStep;
-    private double innerStep;
-    private double outerAngle;
-    private double innerAngle;
-    private double angle;
-    private Color[] colors;
-    private Stroke insideStroke;
-    private Stroke outsideStroke;
+  private static final float OUTSIDE_LINE_THICKNESS = 1;
+  private static final float INSIDE_LINE_THICKNESS = 1;      
+  private int numberOfSides;
+  private double outerStep;
+  private double innerStep;
+  private double outerAngle;
+  private double innerAngle;
+  private double angle;
+  private Color[] colors;
+  private Stroke insideStroke;
+  private Stroke outsideStroke;
 
   public CatsCradlePanel(int numberOfSides) {
     this.setBackground(BG_COLOR);
@@ -84,19 +84,21 @@ public class CatsCradlePanel extends JPanel implements ActionListener {
     // The inside vertices lie on a circle
     // whose radius is the golden ratio and whose center
     // is also at the origin.
-    Week1[] outside = new Week1[this.numberOfSides];
-    Week1[] inside = new Week1[this.numberOfSides];
+    Vector2D[] outside = new Vector2D[this.numberOfSides];
+    Vector2D[] inside = new Vector2D[this.numberOfSides];
+    Vector2D[] third = new Vector2D[this.numberOfSides];
+    Vector2D[] fourth = new Vector2D[this.numberOfSides];
     double goldenRatio = 2.0 / (Math.sqrt(5.0) + 1);
     for (int i = 0; i < this.numberOfSides; i++) {
       double fraction = ((double) i) / this.numberOfSides;
       this.angle = fraction * 2.0 * Math.PI;
       double x = Math.cos(angle + outerAngle);
       double y = Math.sin(angle + outerAngle);
-      outside[i] = new Week1(x, y, this.getY() + v.getY());
+      outside[i] = new Vector2D(x, y);
 
       x = Math.cos(angle + innerAngle);
       y = Math.sin(angle + innerAngle);
-      inside[i] = new Week1(goldenRatio * x, goldenRatio * y, this.getY() + v.getY());
+      inside[i] = new Vector2D(goldenRatio * x, goldenRatio * y);
     } // for
 
     // Make the 2 polygons that are defined by the convex hulls of
@@ -120,46 +122,46 @@ public class CatsCradlePanel extends JPanel implements ActionListener {
 
     g2D.setColor(FG_COLOR);
     for (int i = 0; i < outside.length; i++) {
-    Week1 u = outside[i];
-    u = u.rotateScaleTranslate(rotation, scaleX, scaleY, deltaX, deltaY);
+      Vector2D u = outside[i];
+      u = u.rotateScaleTranslate(rotation, scaleX, scaleY, deltaX, deltaY);
 
-    Week1 v = outside[(i + 1) % this.numberOfSides];
-    v = v.rotateScaleTranslate(rotation, scaleX, scaleY, deltaX, deltaY);
+      Vector2D v = outside[(i + 1) % this.numberOfSides];
+      v = v.rotateScaleTranslate(rotation, scaleX, scaleY, deltaX, deltaY);
 
-    double x0 = u.getX();
-    double y0 = u.getY();
-    double x1 = v.getX();
-    double y1 = v.getY();
-    Line2D line = new Line2D.Double(x0, y0, x1, y1);
-    g2D.setStroke(this.outsideStroke);
-    g2D.draw(line);
+      double x0 = u.getX();
+      double y0 = u.getY();
+      double x1 = v.getX();
+      double y1 = v.getY();
+      Line2D line = new Line2D.Double(x0, y0, x1, y1);
+      g2D.setStroke(this.outsideStroke);
+      g2D.draw(line);
 
-    u = inside[i];
-    u = u.rotateScaleTranslate(rotation, scaleX, scaleY, deltaX, deltaY);
+      u = inside[i];
+      u = u.rotateScaleTranslate(rotation, scaleX, scaleY, deltaX, deltaY);
 
-    v = inside[(i + 1) % this.numberOfSides];
-    v = v.rotateScaleTranslate(rotation, scaleX, scaleY, deltaX, deltaY);
+      v = inside[(i + 1) % this.numberOfSides];
+      v = v.rotateScaleTranslate(rotation, scaleX, scaleY, deltaX, deltaY);
 
-    x0 = u.getX();
-    y0 = u.getY();
-    x1 = v.getX();
-    y1 = v.getY();
+      x0 = u.getX();
+      y0 = u.getY();
+      x1 = v.getX();
+      y1 = v.getY();
 
-    line = new Line2D.Double(x0, y0, x1, y1);
-    g2D.setStroke(this.insideStroke);
-    g2D.draw(line);
+      line = new Line2D.Double(x0, y0, x1, y1);
+      g2D.setStroke(this.insideStroke);
+      g2D.draw(line);
     } // for
 
     // Make the remaining edges (line segments) needed to define
     // the complete graph on the outside set of points.
     g2D.setStroke(this.outsideStroke);
     for (int i = 0; i < this.numberOfSides; i++) {
-      Week1 u = outside[i];
+      Vector2D u = outside[i];
       u = u.rotateScaleTranslate(angle, scaleX, scaleY, deltaX, deltaY);
       double x0 = u.getX();
       double y0 = u.getY();
       for (int j = i + 1; j < this.numberOfSides; j++) {
-        Week1 v = outside[j];
+        Vector2D v = outside[j];
         v = v.rotateScaleTranslate(rotation, scaleX, scaleY, deltaX, deltaY);
         double x1 = v.getX();
         double y1 = v.getY();
@@ -179,12 +181,12 @@ public class CatsCradlePanel extends JPanel implements ActionListener {
     // the complete graph on the inside set of points.
     g2D.setStroke(this.insideStroke);
     for (int i = 0; i < this.numberOfSides; i++) {
-      Week1 u = inside[i];
+      Vector2D u = inside[i];
       u = u.rotateScaleTranslate(angle, scaleX, scaleY, deltaX, deltaY);
       double x0 = u.getX();
       double y0 = u.getY();
       for (int j = i + 1; j < this.numberOfSides; j++) {
-        Week1 v = inside[j];
+        Vector2D v = inside[j];
         v = v.rotateScaleTranslate(rotation, scaleX, scaleY, deltaX, deltaY);
         double x1 = v.getX();
         double y1 = v.getY();
@@ -208,4 +210,3 @@ public class CatsCradlePanel extends JPanel implements ActionListener {
     this.repaint();
   } // actionPerformed( ActionEvent )
 } // CatsCradlePanel
-
